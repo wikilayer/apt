@@ -1,0 +1,72 @@
+name: Withdraw
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package name, such as wlget
+        required: true
+        type: string
+      version:
+        description: Version to take out of the repository, such as 0.2.1
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  withdraw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check the inputs
+        env:
+          PACKAGE: ${{ inputs.package }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "withdraw from main" >&2
+            exit 1
+          fi
+          if [[ ! "$PACKAGE" =~ ^[a-z0-9][a-z0-9.+-]*$ ]]; then
+            echo "package must be a Debian package name, like wlget" >&2
+            exit 1
+          fi
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "version must look like 0.2.1" >&2
+            exit 1
+          fi
+
+      - name: Install tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -qq -y apt-utils
+
+      - name: Import the signing key
+        env:
+          APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
+        run: |
+          if [[ -z "$APT_SIGNING_KEY" ]]; then
+            echo "the APT_SIGNING_KEY secret is not set" >&2
+            exit 1
+          fi
+          printf '%s\n' "$APT_SIGNING_KEY" | gpg --batch --import
+
+      - name: Withdraw
+        env:
+          PACKAGE: ${{ inputs.package }}
+          VERSION: ${{ inputs.version }}
+        run: make withdraw PACKAGE="$PACKAGE" VERSION="$VERSION"
+
+      - name: Commit
+        env:
+          PACKAGE: ${{ inputs.package }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all pool dists
+          git commit --message "Withdraw $PACKAGE $VERSION"
+          git push

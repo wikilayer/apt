@@ -71,4 +71,18 @@ if bin/add-packages incoming 2>/dev/null; then
   exit 1
 fi
 
-echo "an upgrade reached apt through the signed index, and a published package stayed as published"
+if bin/withdraw apt-test-hello 9.9.9 2>/dev/null; then
+  echo "a version that was never published was withdrawn" >&2
+  exit 1
+fi
+bin/withdraw apt-test-hello 1.0.0 >/dev/null
+bin/index
+apt-get update -qq
+test "$(apt-cache madison apt-test-hello | wc -l)" -eq 1
+apt-cache madison apt-test-hello | grep --quiet ' 1\.1\.0 '
+if bin/withdraw apt-test-hello 1.1.0 2>/dev/null; then
+  echo "the only version left was withdrawn, and apt install would stop working" >&2
+  exit 1
+fi
+
+echo "an upgrade reached apt through the signed index, a published package stayed as published, and a withdrawn version left the index"
