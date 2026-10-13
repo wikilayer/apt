@@ -30,5 +30,6 @@ fingerprint `8EC9 FCEC 18EB 53DD 891F 78EE A731 992C 5647 65AF`.
 
 The Publish workflow takes a release of a wikilayer repository, adds its `.deb`
 files to `pool/` and signs a new index under `dists/`. A file already in the pool
-is never replaced: a changed package is a new version. `make test` checks the
-repository end to end in a Debian container.
+is never replaced: a changed package is a new version. Two runs at once do not
+queue: the later push fails, and running it again is safe. `make test` checks
+the repository end to end in a Debian container.
