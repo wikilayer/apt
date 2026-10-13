@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -ne 1 || ! -f $1 ]]; then
+  echo "usage: bin/verify <public keyring>" >&2
+  exit 2
+fi
+
+keyring=$(realpath "$1")
+release=dists/stable
+if ! gpgv --keyring "$keyring" "$release/InRelease" 2>/dev/null \
+  || ! gpgv --keyring "$keyring" "$release/Release.gpg" "$release/Release" 2>/dev/null; then
+  echo "the index is not signed by the key in $1, so apt would refuse it; check the APT_SIGNING_KEY secret" >&2
+  exit 1
+fi
+echo "the index is signed by the key in $1"

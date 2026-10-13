@@ -7,9 +7,12 @@ architectures=(amd64 arm64)
 mkdir -p pool
 for arch in "${architectures[@]}"; do
   dir="dists/$suite/main/binary-$arch"
-  mkdir -p "$dir"
+  mkdir -p "$dir/by-hash/SHA256"
   apt-ftparchive --arch "$arch" packages pool > "$dir/Packages"
   gzip -9 --no-name --keep --force "$dir/Packages"
+  for index in "$dir/Packages" "$dir/Packages.gz"; do
+    cp "$index" "$dir/by-hash/SHA256/$(sha256sum "$index" | cut -d ' ' -f 1)"
+  done
 done
 
 apt-ftparchive \
@@ -20,6 +23,7 @@ apt-ftparchive \
   -o APT::FTPArchive::Release::Architectures="${architectures[*]}" \
   -o APT::FTPArchive::Release::Components=main \
   -o APT::FTPArchive::Release::Description="Wikilayer packages" \
+  -o APT::FTPArchive::Release::Acquire-By-Hash=yes \
   release "dists/$suite" > "dists/$suite/Release.new"
 mv "dists/$suite/Release.new" "dists/$suite/Release"
 

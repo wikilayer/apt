@@ -35,6 +35,20 @@ EOF
 package 1.0.0 first incoming
 bin/add-packages incoming
 bin/index
+bin/verify /usr/share/keyrings/test.gpg
+
+grep --quiet '^Acquire-By-Hash: yes$' dists/stable/Release
+packages_hash=$(sha256sum "dists/stable/main/binary-$(dpkg --print-architecture)/Packages" | cut -d ' ' -f 1)
+test -f "dists/stable/main/binary-$(dpkg --print-architecture)/by-hash/SHA256/$packages_hash"
+
+stranger="$work/stranger"
+mkdir -m 700 "$stranger"
+GNUPGHOME="$stranger" gpg --batch --quiet --pinentry-mode loopback --passphrase '' --quick-gen-key "Stranger <stranger@example.invalid>" ed25519 sign never
+GNUPGHOME="$stranger" gpg --export > "$work/stranger.gpg"
+if bin/verify "$work/stranger.gpg" 2>/dev/null; then
+  echo "an index signed by one key passed the check against another" >&2
+  exit 1
+fi
 
 echo "deb [signed-by=/usr/share/keyrings/test.gpg] file://$work stable main" > /etc/apt/sources.list.d/test.list
 apt-get update -qq
