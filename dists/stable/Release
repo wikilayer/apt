@@ -1,0 +1,29 @@
+Acquire-By-Hash: yes
+Architectures: amd64 arm64
+Codename: stable
+Components: main
+Date: Tue, 13 Oct 2026 16:24:02 +0000
+Description: Wikilayer packages
+Label: Wikilayer
+Origin: Wikilayer
+Suite: stable
+MD5Sum:
+ e26c0aae8159385a5d6c52cdc60ace58              801 main/binary-amd64/Packages
+ 4d02aca6df0efb9fe95ac9f08efc9f8d              546 main/binary-amd64/Packages.gz
+ a93b450eb63fa12313e0a3599b0c5365              801 main/binary-arm64/Packages
+ fc389f63f30b834b31a517939b463c8f              543 main/binary-arm64/Packages.gz
+SHA1:
+ 5edda06221a3964fde9dcbf0ba8747609ebc3669              801 main/binary-amd64/Packages
+ a09f33e41f49789f8fbf7ab29f6e7ae516c9b360              546 main/binary-amd64/Packages.gz
+ 17aeac236b0a341798eeb66ab74374d7b643ea56              801 main/binary-arm64/Packages
+ 6329a7499c9833f88d58346f03f5e138f2f29f7a              543 main/binary-arm64/Packages.gz
+SHA256:
+ ae0aa1310d8c97b3d8f05abde16e5fdb961629a28ee123bf666109031f703029              801 main/binary-amd64/Packages
+ dd62ccbc2c21ab553292fd5ba94a47dc77f132a7a63f8aac9d3613a4cc212fa3              546 main/binary-amd64/Packages.gz
+ 9f14d20bdd488b177ff4829076c26d6d56057bc79bc6bba0cde0f2732addbf72              801 main/binary-arm64/Packages
+ dfd065111a73f1135108a4d4867e060d64b411cd557b51e4a003e2e1590c8070              543 main/binary-arm64/Packages.gz
+SHA512:
+ 94e07db4a18c791a369f7b8f5e4aa6a79bc19e2cc394d827f23260bb871e1987281d4babf16d3030e3a6c0c35d0a4b6cf9c1ea5e1bcea3827d9e26862e194ef5              801 main/binary-amd64/Packages
+ 4ec0374b3d96f29fac165247bb2fda88bbf146eb46cb52524d2076285a8a8d63086404de874da03150a5f099cda871b4cdfff5b45d8ae05b0c32dfdaf926530a              546 main/binary-amd64/Packages.gz
+ 11bc9af39b52d8dcf25716b646557847d4d7351b7b0c838b5e5226905ff84a778edcf63649c034b05f9909e89ea7e74f1aa7de6021546bf975f514d351d2207f              801 main/binary-arm64/Packages
+ 9bcd2165b8aee94b156fd88489eafe7da480d1bf9e8e981e8e1ccc3a006e10258e59ea2ac98a22871845d979af20c8445d73eb7a31de1583656a6bdecb95e0f5              543 main/binary-arm64/Packages.gz
