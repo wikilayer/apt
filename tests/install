@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+apt-get update -qq
+apt-get install -qq -y apt-utils gnupg >/dev/null
+
+work=$(mktemp -d)
+chmod 755 "$work"
+cp -r /repo/bin "$work/"
+cd "$work"
+
+export GNUPGHOME="$work/gnupg"
+mkdir -m 700 "$GNUPGHOME"
+gpg --batch --quiet --pinentry-mode loopback --passphrase '' --quick-gen-key "Test <test@example.invalid>" ed25519 sign never
+gpg --export > /usr/share/keyrings/test.gpg
+
+package() {
+  local version=$1 text=$2 out=$3
+  local root
+  root=$(mktemp -d)
+  mkdir -p "$root/DEBIAN" "$root/usr/bin"
+  printf '#!/bin/sh\necho %s\n' "$text" > "$root/usr/bin/apt-test-hello"
+  chmod 755 "$root/usr/bin/apt-test-hello"
+  cat > "$root/DEBIAN/control" <<EOF
+Package: apt-test-hello
+Version: $version
+Architecture: $(dpkg --print-architecture)
+Maintainer: Test <test@example.invalid>
+Description: package for the repository test
+EOF
+  mkdir -p "$out"
+  dpkg-deb --root-owner-group --build "$root" "$out/apt-test-hello_${version}_$(dpkg --print-architecture).deb" >/dev/null
+}
+
+package 1.0.0 first incoming
+bin/add-packages incoming
+bin/index
+
+echo "deb [signed-by=/usr/share/keyrings/test.gpg] file://$work stable main" > /etc/apt/sources.list.d/test.list
+apt-get update -qq
+apt-get install -qq -y apt-test-hello >/dev/null
+test "$(apt-test-hello)" = first
+
+package 1.1.0 second incoming
+bin/add-packages incoming
+bin/index
+apt-get update -qq
+apt-get install -qq -y --only-upgrade apt-test-hello >/dev/null
+test "$(apt-test-hello)" = second
+
+bin/add-packages incoming >/dev/null
+
+rm -r incoming
+package 1.1.0 changed incoming
+if bin/add-packages incoming 2>/dev/null; then
+  echo "a published package was replaced by other contents under the same name" >&2
+  exit 1
+fi
+
+echo "an upgrade reached apt through the signed index, and a published package stayed as published"

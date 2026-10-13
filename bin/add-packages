@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -ne 1 || ! -d $1 ]]; then
+  echo "usage: bin/add-packages <directory with .deb files>" >&2
+  exit 2
+fi
+
+shopt -s nullglob
+debs=("$1"/*.deb)
+if [[ ${#debs[@]} -eq 0 ]]; then
+  echo "no .deb files in $1" >&2
+  exit 1
+fi
+
+for deb in "${debs[@]}"; do
+  name=$(dpkg-deb --field "$deb" Package)
+  dest="pool/main/${name:0:1}/$name/$(basename "$deb")"
+  if [[ -e $dest ]]; then
+    if ! cmp --silent "$deb" "$dest"; then
+      echo "$dest is already published with other contents; a published package never changes, so release a new version" >&2
+      exit 1
+    fi
+    echo "$dest is already published"
+    continue
+  fi
+  mkdir -p "$(dirname "$dest")"
+  cp "$deb" "$dest"
+  echo "added $dest"
+done

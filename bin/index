@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+suite=stable
+architectures=(amd64 arm64)
+
+mkdir -p pool
+for arch in "${architectures[@]}"; do
+  dir="dists/$suite/main/binary-$arch"
+  mkdir -p "$dir"
+  apt-ftparchive --arch "$arch" packages pool > "$dir/Packages"
+  gzip -9 --no-name --keep --force "$dir/Packages"
+done
+
+apt-ftparchive \
+  -o APT::FTPArchive::Release::Origin=Wikilayer \
+  -o APT::FTPArchive::Release::Label=Wikilayer \
+  -o APT::FTPArchive::Release::Suite="$suite" \
+  -o APT::FTPArchive::Release::Codename="$suite" \
+  -o APT::FTPArchive::Release::Architectures="${architectures[*]}" \
+  -o APT::FTPArchive::Release::Components=main \
+  -o APT::FTPArchive::Release::Description="Wikilayer packages" \
+  release "dists/$suite" > "dists/$suite/Release.new"
+mv "dists/$suite/Release.new" "dists/$suite/Release"
+
+gpg --batch --yes --clearsign --output "dists/$suite/InRelease" "dists/$suite/Release"
+gpg --batch --yes --armor --detach-sign --output "dists/$suite/Release.gpg" "dists/$suite/Release"

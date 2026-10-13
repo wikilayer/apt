@@ -1,0 +1,84 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: Repository whose release holds the .deb files, such as wikilayer/wlget
+        required: true
+        type: string
+      tag:
+        description: Release tag, such as v0.2.1
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check the inputs
+        env:
+          REPOSITORY: ${{ inputs.repository }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "publish from main" >&2
+            exit 1
+          fi
+          if [[ ! "$REPOSITORY" =~ ^wikilayer/[a-z0-9-]+$ ]]; then
+            echo "repository must be one of wikilayer's, like wikilayer/wlget" >&2
+            exit 1
+          fi
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "tag must look like v0.2.1" >&2
+            exit 1
+          fi
+
+      - name: Install tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -qq -y apt-utils
+
+      - name: Fetch the packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ inputs.repository }}
+          TAG: ${{ inputs.tag }}
+        run: gh release download "$TAG" --repo "$REPOSITORY" --pattern '*.deb' --dir "$RUNNER_TEMP/incoming"
+
+      - name: Import the signing key
+        env:
+          APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
+        run: |
+          if [[ -z "$APT_SIGNING_KEY" ]]; then
+            echo "the APT_SIGNING_KEY secret is not set" >&2
+            exit 1
+          fi
+          printf '%s\n' "$APT_SIGNING_KEY" | gpg --batch --import
+
+      - name: Publish
+        run: make publish INCOMING="$RUNNER_TEMP/incoming"
+
+      - name: Commit
+        env:
+          REPOSITORY: ${{ inputs.repository }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pool dists
+          if git diff --cached --quiet; then
+            echo "nothing new to publish"
+            exit 0
+          fi
+          git commit --message "Publish $REPOSITORY $TAG"
+          git push
