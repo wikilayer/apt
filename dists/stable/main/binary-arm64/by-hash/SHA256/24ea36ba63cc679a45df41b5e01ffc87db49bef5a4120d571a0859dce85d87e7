@@ -1,0 +1,76 @@
+Package: wlget
+Architecture: arm64
+Version: 0.2.2
+Priority: optional
+Section: utils
+Maintainer: Wikilayer <info@wikilayer.org>
+Installed-Size: 7041
+Depends: ca-certificates
+Filename: pool/main/w/wlget/wlget_0.2.2_arm64.deb
+Size: 2991000
+MD5sum: 57b7a642675c4be6cc1eb93724356c50
+SHA1: 4f018a77f43f64102354952a6b1290809fd1a6b5
+SHA256: 4cf5bf880dac51c27967a9c52a40031d98132bf301b40c385b380851feb24b80
+SHA512: d8e4e112204de88dba7c888c2f4d798066f67cdfedc74dc0f1b8d82d3c0b26d0279936417f31f316ea503ab8a408b11a7d2174d0bfefad20c2b3ab393e7f7b4b
+Homepage: https://github.com/wikilayer/wlget
+Description: prints a Wikilayer page, wiki or chat in the terminal
+ wlget reads a Wikilayer address and prints what a browser signed in to your
+ account would get there: a page as Markdown, a chat message as it arrives.
+
+Package: wlget
+Architecture: arm64
+Version: 0.3.0
+Priority: optional
+Section: utils
+Maintainer: Wikilayer <info@wikilayer.org>
+Installed-Size: 7233
+Depends: ca-certificates
+Filename: pool/main/w/wlget/wlget_0.3.0_arm64.deb
+Size: 3089392
+MD5sum: f50d80ac016190555260cf7ca5695a0b
+SHA1: 752188473db3881359866d368832d83a50971679
+SHA256: 18d93e274fddbb7f4377d3ca6e62c08035e7f2e3281456094b2a1323c9e72637
+SHA512: 7d4b666c91c843d48439d9501e58bcf9e3f94cc1c462b26ebe61b983dc072a10d41f37f922574e09f5e876eaefbcd6f2a87aa778f49ed677f6b4145cbd1efd31
+Homepage: https://github.com/wikilayer/wlget
+Description: prints a Wikilayer page, wiki or chat in the terminal
+ wlget reads a Wikilayer address and prints what a browser signed in to your
+ account would get there: a page as Markdown, a chat message as it arrives.
+
+Package: wlget
+Architecture: arm64
+Version: 0.3.1
+Priority: optional
+Section: utils
+Maintainer: Wikilayer <info@wikilayer.org>
+Installed-Size: 7233
+Depends: ca-certificates
+Filename: pool/main/w/wlget/wlget_0.3.1_arm64.deb
+Size: 3089416
+MD5sum: 3606b819a3d06f8aacb853634f74d29c
+SHA1: be66e4e662d1c2e7e2e01a6a8f431629340df12c
+SHA256: 97e7a2103953a714fe55fbea6c7221503b87aa6a7472b84937ac8c03999ebddd
+SHA512: 31a310b0fd36f3da4fd81760308b344ff73ececa8ae117bbd1067f72132708f0891dcbe522d8c3522c5749cb919099dafce1840ce3a55e62245d2978a175dd8b
+Homepage: https://github.com/wikilayer/wlget
+Description: prints a Wikilayer page, wiki or chat in the terminal
+ wlget reads a Wikilayer address and prints what a browser signed in to your
+ account would get there: a page as Markdown, a chat message as it arrives.
+
+Package: wlget
+Architecture: arm64
+Version: 0.4.0
+Priority: optional
+Section: utils
+Maintainer: Wikilayer <info@wikilayer.org>
+Installed-Size: 7233
+Depends: ca-certificates
+Filename: pool/main/w/wlget/wlget_0.4.0_arm64.deb
+Size: 3093480
+MD5sum: 84ca5b647cf2c434f68d69e45a7fab74
+SHA1: 43da73b06ae3d78151613d9916c429fa00a1c774
+SHA256: 1450d3f63c9629b4d109acd51d19641a7d6e8c128a98761ccab6f2d7cb8b0f73
+SHA512: 5126c1d0bd8d53938fd38996f634f99664c48fe729af2ccbbea3b1d34496fb0050382eb1995cf0cf8b43ce96f83edca8c18f603aef173ea146d81f067bc1b8ca
+Homepage: https://github.com/wikilayer/wlget
+Description: prints a Wikilayer page, wiki or chat in the terminal
+ wlget reads a Wikilayer address and prints what a browser signed in to your
+ account would get there: a page as Markdown, a chat message as it arrives.
+
