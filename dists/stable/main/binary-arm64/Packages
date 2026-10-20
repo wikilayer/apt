@@ -93,3 +93,22 @@ Description: prints a Wikilayer page, wiki or chat in the terminal
  wlget reads a Wikilayer address and prints what a browser signed in to your
  account would get there: a page as Markdown, a chat message as it arrives.
 
+Package: wlget
+Architecture: arm64
+Version: 0.6.0
+Priority: optional
+Section: utils
+Maintainer: Wikilayer <info@wikilayer.org>
+Installed-Size: 7297
+Depends: ca-certificates
+Filename: pool/main/w/wlget/wlget_0.6.0_arm64.deb
+Size: 3106574
+MD5sum: 2b238f5777e55dd553258a67ed6471c6
+SHA1: 5f05306d6cb8d9bfb59f4b02a8bbf7a490169140
+SHA256: a9fcbabd87b6c19c4b8c50a76ecece878e3e7b659cff055324ac640bf2bfe4dd
+SHA512: ea4da1cb693883308979dc54751067239bd6230fe77a7312f5e49782588b0406412782d03b1dc2f0fa8273952605eee9c513f5fd1a8829641e8400395760509b
+Homepage: https://github.com/wikilayer/wlget
+Description: prints a Wikilayer page, wiki or chat in the terminal
+ wlget reads a Wikilayer address and prints what a browser signed in to your
+ account would get there: a page as Markdown, a chat message as it arrives.
+
